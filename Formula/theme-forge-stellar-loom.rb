@@ -1,8 +1,8 @@
 class ThemeForgeStellarLoom < Formula
   desc "Starlight Theme v1 and v2 compiler and package generator"
   homepage "https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom"
-  url "https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/releases/download/v0.2.0/knowledge-forge-ai-theme-forge-stellar-loom-0.2.0.tgz"
-  sha256 "4ec53cfe3c48a1d5b44e5fc695fe8c07b4f72dc4076a91ae10efa7d579818b34"
+  url "https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/releases/download/v0.3.0/knowledge-forge-ai-theme-forge-stellar-loom-0.3.0.tgz"
+  sha256 "bf00ee759573fa17b3c8191b73150a7b8c787491fb23aac825f4116e2dd52474"
   license "AGPL-3.0-or-later"
 
   depends_on "node@22"
@@ -16,7 +16,7 @@ class ThemeForgeStellarLoom < Formula
   end
 
   test do
-    assert_match "0.2.0", shell_output("#{bin}/tfsl --version")
+    assert_match "0.3.0", shell_output("#{bin}/tfsl --version")
     assert_equal ["tfsl", "tfsl-batch"], bin.children.map { |x| x.basename.to_s }.sort
     package = libexec/"lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom"
     cp package/"examples/amber-forge.theme.json", testpath/"theme.json"

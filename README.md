@@ -1,23 +1,35 @@
 # Knowledge Forge AI Homebrew tap
 
-Homebrew Formulae for the Stellar Burst and Stellar Loom command-line tools.
+Homebrew Formulae for Knowledge Forge AI command-line tools.
+
+## Theme Forge CLI family
 
 ```sh
 brew install Knowledge-Forge-AI/tap/theme-forge-stellar-burst
 brew install Knowledge-Forge-AI/tap/theme-forge-stellar-loom
+brew install Knowledge-Forge-AI/tap/theme-forge-solar-sail
+brew install Knowledge-Forge-AI/tap/theme-forge-nebular-fusion
 ```
 
-Stellar Burst 0.5.0 is SVG-only; PNG/raster distribution is not claimed. Stellar Loom 0.2.0 provides the qualified Theme v1/v2 compiler and tfsl/tfsl-batch interfaces. Both Formulae depend on node@22; qualification used Node 22.23.2.
+CLI coverage:
 
-Terminal Nova is an npm project dependency and has no Formula:
+- **Theme Forge Stellar Burst 0.5.0** — `tfsb` plus the `tfsb-studio-service` helper.
+- **Theme Forge Stellar Loom 0.3.0** — `tfsl` and `tfsl-batch`.
+- **Theme Forge Solar Sail 0.1.0** — `tfss`.
+- **Theme Forge Nebular Fusion 0.4.0** — `tfnf` on macOS Apple Silicon.
+
+The Nebular **Formula** installs the exact ad-hoc-signed macOS Apple Silicon developer application
+payload and exposes the `tfnf` launcher. This does not authorize a Cask: the Nebular Homebrew Cask
+remains WITHHELD / NO-GO, and Developer ID signing, notarization and Gatekeeper qualification are
+not claimed.
+
+Terminal Nova is an npm project dependency rather than a CLI product and therefore has no Formula:
 
 ```sh
-npm install @knowledge-forge-ai/starlight-theme-terminal-nova@0.2.0
+npm install @knowledge-forge-ai/starlight-theme-terminal-nova@0.3.0
 ```
 
-Use the documented compatible Astro/Starlight consumer setup. The TypeScript 7.0.2 native compiler build-tool risk remains open; it is absent from the Nova npm/static runtime.
 
-Nebular Fusion is available separately as an ad-hoc macOS arm64 developer artifact. Its Homebrew cask is WITHHELD / NO-GO. Developer ID, notarization and Gatekeeper qualification are not claimed.
 ## Agentic Praxis Grimoire
 
 Homebrew formula for the provider-neutral coding-agent toolkit and canonical skill corpus (`apgr`).
