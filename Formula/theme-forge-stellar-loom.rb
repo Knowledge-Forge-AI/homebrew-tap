@@ -1,35 +1,47 @@
 class ThemeForgeStellarLoom < Formula
-  desc "Starlight Theme v1 and v2 compiler and package generator"
+  desc "Theme builder and token compiler for the Theme Forge family"
   homepage "https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom"
-  url "https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/releases/download/v0.3.0/knowledge-forge-ai-theme-forge-stellar-loom-0.3.0.tgz"
-  sha256 "bf00ee759573fa17b3c8191b73150a7b8c787491fb23aac825f4116e2dd52474"
+  url "https://registry.npmjs.org/@knowledge-forge-ai/theme-forge-stellar-loom/-/theme-forge-stellar-loom-0.4.0.tgz"
+  sha256 "4550314d9a6eb9a016c8637eb2a0a98e9a410210ad6546642dfce31c7402c9ec"
   license "AGPL-3.0-or-later"
 
-  depends_on "node@22"
+  depends_on "node"
 
   def install
-    ENV.prepend_path "PATH", formula_opt_bin("node@22")
-    system formula_opt_bin("node@22")/"npm", "install", "--global", "--prefix", libexec,
-           "--ignore-scripts", "--no-audit", "--no-fund", cached_download
-    (bin/"tfsl").write_env_script libexec/"bin/tfsl", PATH: "#{formula_opt_bin("node@22")}:$PATH"
-    (bin/"tfsl-batch").write_env_script libexec/"bin/tfsl-batch", PATH: "#{formula_opt_bin("node@22")}:$PATH"
+    system "npm", "install", *std_npm_args(prefix: libexec)
+    (bin/"tfsl").write <<~EOS
+      #!/bin/sh
+      exec "#{formula_opt_bin("node")}/node" "#{libexec}/lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom/bin/tfsl.js" "$@"
+    EOS
+    (bin/"tfsl-batch").write <<~EOS
+      #!/bin/sh
+      exec "#{formula_opt_bin("node")}/node" "#{libexec}/lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom/bin/tfsl-batch.js" "$@"
+    EOS
   end
 
   test do
-    assert_match "0.3.0", shell_output("#{bin}/tfsl --version")
-    assert_equal ["tfsl", "tfsl-batch"], bin.children.map { |x| x.basename.to_s }.sort
-    package = libexec/"lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom"
-    cp package/"examples/amber-forge.theme.json", testpath/"theme.json"
-    system bin/"tfsl", "validate", "theme.json"
-    system bin/"tfsl", "compile", "theme.json", "--out", "first"
-    system bin/"tfsl", "compile", "theme.json", "--out", "second"
-    %w[theme.css theme.descriptor.json].each do |file|
-      assert_equal (testpath/"first"/file).read, (testpath/"second"/file).read
-    end
-    (testpath/"metadata.json").write('{"name":"starlight-theme-brew-probe","version":"1.0.0"}')
-    system bin/"tfsl", "generate", "theme.json", "--package", "metadata.json", "--out", "generated"
-    assert_path_exists testpath/"generated/index.js"
-    invalid = "#{bin}/tfsl generate theme.json --package metadata.json --out rejected --template not-a-template"
-    assert_match "Unknown", shell_output("#{invalid} 2>&1", 1)
+    (testpath/"probe.cjs").write <<~JS
+      const assert = require("node:assert/strict");
+      const fs = require("node:fs");
+      const { spawnSync } = require("node:child_process");
+      const cli = "#{bin}/tfsl";
+      const theme = "#{libexec}/lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom/examples/stellar-cyan.theme.json";
+      const run = (args, input) => spawnSync(cli, args, { input, encoding: "utf8", timeout: 10000 });
+      assert.equal(run(["--version"]).status, 0);
+      assert.equal(run(["validate", theme, "--json"]).status, 0);
+      assert.equal(run(["compile", theme, "--out", "one", "--json"]).status, 0);
+      assert.equal(run(["compile", theme, "--out", "two", "--json"]).status, 0);
+      assert.equal(fs.readFileSync("one/theme.css", "utf8"), fs.readFileSync("two/theme.css", "utf8"));
+      const batch = spawnSync("#{bin}/tfsl-batch", [], {
+        input: JSON.stringify({ action: "example", exampleName: "stellar-cyan", uiRevision: 42 }),
+        encoding: "utf8", timeout: 10000
+      });
+      assert.equal(batch.status, 0);
+      assert.equal(JSON.parse(batch.stdout).uiRevision, 42);
+      assert.equal(JSON.parse(batch.stdout).valid, true);
+      fs.writeFileSync("invalid.json", "{");
+      assert.notEqual(run(["validate", "invalid.json", "--json"]).status, 0);
+    JS
+    system formula_opt_bin("node")/"node", testpath/"probe.cjs"
   end
 end
