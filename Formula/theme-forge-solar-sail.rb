@@ -1,8 +1,8 @@
 class ThemeForgeSolarSail < Formula
   desc "Tailwind v4 and shadcn/ui application theme compiler, library, and tfss CLI"
   homepage "https://github.com/Knowledge-Forge-AI/theme-forge-solar-sail"
-  url "https://registry.npmjs.org/@knowledge-forge-ai/theme-forge-solar-sail/-/theme-forge-solar-sail-0.2.0.tgz"
-  sha256 "1a5e948d6970022f57ecde0ec1d9138650f2b78c7fafc0224f63e4ec8c223454"
+  url "https://registry.npmjs.org/@knowledge-forge-ai/theme-forge-solar-sail/-/theme-forge-solar-sail-0.2.1.tgz"
+  sha256 "ebc4f21d1e61dbc0ac4e87ce81f7ecec4f97d7c15562356e429d4c1a4e9aa5a0"
   license "AGPL-3.0-or-later"
 
   depends_on "node"
