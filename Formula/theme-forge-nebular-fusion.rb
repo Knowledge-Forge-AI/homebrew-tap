@@ -1,8 +1,8 @@
 class ThemeForgeNebularFusion < Formula
   desc "CLI launcher for the Nebular Fusion desktop workbench"
   homepage "https://github.com/Knowledge-Forge-AI/theme-forge-nebular-fusion"
-  url "https://github.com/Knowledge-Forge-AI/theme-forge-nebular-fusion/releases/download/v0.4.0/theme-forge-nebular-fusion-v0.4.0-aarch64-apple-darwin.tar.gz"
-  sha256 "cf42598dabfa1b789c389c0c67fb0420fbf3e9c3947dd93f8478b60ec2652891"
+  url "https://github.com/Knowledge-Forge-AI/theme-forge-nebular-fusion/releases/download/v0.6.1/theme-forge-nebular-fusion-v0.6.1-aarch64-apple-darwin.app.tar.gz"
+  sha256 "e5ab9c5ce5dd7fb02274b11b223db9db7ac1f3b2167334ee2f322abd3c8ec4be"
   license "AGPL-3.0-or-later"
 
   depends_on arch: :arm64
@@ -10,9 +10,11 @@ class ThemeForgeNebularFusion < Formula
 
   def install
     app = "Theme Forge Nebular Fusion.app"
-    odie "Nebular Fusion application payload is missing" unless File.directory?(app)
+    # Homebrew changes into an archive's lone top-level directory before install.
+    staged = (File.basename(Dir.pwd) == app) ? Pathname.pwd : Pathname(app)
+    odie "Nebular Fusion application payload is missing" unless (staged/"Contents/MacOS/theme-forge-nebular-fusion").file?
 
-    libexec.install app
+    (libexec/app).install staged.children
 
     (bin/"tfnf").write <<~SH
       #!/bin/sh
@@ -21,7 +23,7 @@ class ThemeForgeNebularFusion < Formula
 
       case "$1" in
         -v|--version)
-          echo "theme-forge-nebular-fusion 0.4.0 (aarch64-darwin)"
+          echo "theme-forge-nebular-fusion 0.6.1 (aarch64-darwin)"
           exit 0
           ;;
         -h|--help)
@@ -49,7 +51,7 @@ class ThemeForgeNebularFusion < Formula
   end
 
   test do
-    assert_match "0.4.0", shell_output("#{bin}/tfnf --version")
+    assert_match "0.6.1", shell_output("#{bin}/tfnf --version")
     assert_match "Nebular Fusion CLI launcher", shell_output("#{bin}/tfnf --help")
     assert_path_exists shell_output("#{bin}/tfnf --path").strip
   end
