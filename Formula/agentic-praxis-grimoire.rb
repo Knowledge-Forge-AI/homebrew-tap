@@ -1,13 +1,13 @@
 class AgenticPraxisGrimoire < Formula
   desc "Provider-neutral coding-agent toolkit and canonical skill corpus"
   homepage "https://github.com/Knowledge-Forge-AI/agentic-praxis-grimoire"
-  version "0.12.0"
+  version "0.13.0"
   license "AGPL-3.0-or-later"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/Knowledge-Forge-AI/agentic-praxis-grimoire/releases/download/v0.12.0/knowledge-forge-ai-apgr-darwin-arm64-0.12.0.tgz"
-      sha256 "7f9a2ea9c1cdde01326f004afb48048a5eaa28c4b699739683cb5f2e0c8fb125"
+      url "https://github.com/Knowledge-Forge-AI/agentic-praxis-grimoire/releases/download/v0.13.0/knowledge-forge-ai-apgr-darwin-arm64-0.13.0.tgz"
+      sha256 "4dde4d0212bc73e32fcbbecb347844b53430f0a4c751db292a654aa46dfe21d6"
     end
     if Hardware::CPU.intel?
       odie "Intel macOS (darwin/amd64) is not distributed or supported by Agentic Praxis Grimoire."
@@ -16,12 +16,12 @@ class AgenticPraxisGrimoire < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/Knowledge-Forge-AI/agentic-praxis-grimoire/releases/download/v0.12.0/knowledge-forge-ai-apgr-linux-x64-0.12.0.tgz"
-      sha256 "48a71db07484ab4ad57d9c9930c88b2fda823ffaa5a257e81a7f1c6f883a5332"
+      url "https://github.com/Knowledge-Forge-AI/agentic-praxis-grimoire/releases/download/v0.13.0/knowledge-forge-ai-apgr-linux-x64-0.13.0.tgz"
+      sha256 "58cb285e23bdeb4c2db70dee2f1e1a49fa203cd4fb8216ad48d767e9ecbf1059"
     end
     if Hardware::CPU.arm?
-      url "https://github.com/Knowledge-Forge-AI/agentic-praxis-grimoire/releases/download/v0.12.0/knowledge-forge-ai-apgr-linux-arm64-0.12.0.tgz"
-      sha256 "ee97302dc9611d47e4e4916d724a6e3a94b2f19d0b0157c8b98bdafa37ca002d"
+      url "https://github.com/Knowledge-Forge-AI/agentic-praxis-grimoire/releases/download/v0.13.0/knowledge-forge-ai-apgr-linux-arm64-0.13.0.tgz"
+      sha256 "951eb2c1e04bc0544d194d159fc92124dcc65f30ec8f90d8988ef41682f54753"
     end
   end
 
