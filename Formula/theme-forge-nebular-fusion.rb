@@ -14,7 +14,9 @@ class ThemeForgeNebularFusion < Formula
     staged = (File.basename(Dir.pwd) == app) ? Pathname.pwd : Pathname(app)
     odie "Nebular Fusion application payload is missing" unless (staged/"Contents/MacOS/theme-forge-nebular-fusion").file?
 
-    (libexec/app).install staged.children
+    # Homebrew adds build metadata beside Contents in the staging directory.
+    # The authenticated app archive contains only Contents at its root.
+    (libexec/app).install staged/"Contents"
 
     (bin/"tfnf").write <<~SH
       #!/bin/sh
@@ -54,5 +56,6 @@ class ThemeForgeNebularFusion < Formula
     assert_match "0.7.0", shell_output("#{bin}/tfnf --version")
     assert_match "Nebular Fusion CLI launcher", shell_output("#{bin}/tfnf --help")
     assert_path_exists shell_output("#{bin}/tfnf --path").strip
+    assert_equal ["Contents"], (libexec/"Theme Forge Nebular Fusion.app").children.map { |p| p.basename.to_s }.sort
   end
 end
