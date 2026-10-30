@@ -1,0 +1,105 @@
+name: Qualify Theme Forge Homebrew formulas
+
+on:
+  pull_request:
+    paths:
+      - 'Formula/theme-forge-*.rb'
+      - '.github/workflows/theme-forge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'Formula/theme-forge-*.rb'
+      - '.github/workflows/theme-forge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: theme-forge-brew-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native:
+    name: Homebrew install and tests (${{ matrix.label }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: darwin-arm64
+            runner: macos-15
+            machine: arm64
+          - label: linux-amd64
+            runner: ubuntu-24.04
+            machine: x86_64
+          - label: linux-arm64
+            runner: ubuntu-24.04-arm
+            machine: aarch64
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_ANALYTICS: '1'
+      HOMEBREW_NO_ENV_HINTS: '1'
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - name: Verify native host and existing Homebrew
+        env:
+          EXPECTED_MACHINE: ${{ matrix.machine }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = "$EXPECTED_MACHINE"
+          brew_bin=''
+          for candidate in /opt/homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin/brew; do
+            if test -x "$candidate"; then brew_bin="$candidate"; break; fi
+          done
+          test -n "$brew_bin"
+          echo "HOMEBREW_BIN=$brew_bin" >> "$GITHUB_ENV"
+          echo "$("$brew_bin" --prefix)/bin" >> "$GITHUB_PATH"
+          echo "$("$brew_bin" --prefix)/sbin" >> "$GITHUB_PATH"
+          "$brew_bin" config
+      - name: Install and test the exact local tap
+        shell: bash
+        run: |
+          set -euo pipefail
+          tap='knowledge-forge-ai/publication-candidate'
+          "$HOMEBREW_BIN" tap --custom-remote "$tap" "$GITHUB_WORKSPACE"
+          test "$(git -C "$("$HOMEBREW_BIN" --repo "$tap")" rev-parse HEAD)" = "$GITHUB_SHA"
+          for product in stellar-burst stellar-loom solar-sail; do
+            formula="$tap/theme-forge-$product"
+            "$HOMEBREW_BIN" install --formula "$formula"
+            "$HOMEBREW_BIN" test --verbose "$formula"
+          done
+          test "$(tfsb --version)" = '0.7.0'
+          test "$(tfsl --version)" = '@knowledge-forge-ai/theme-forge-stellar-loom 0.5.0'
+          test "$(tfss --version)" = '@knowledge-forge-ai/theme-forge-solar-sail v0.3.0'
+      - name: Verify Nebular app formula on Apple Silicon
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          formula='knowledge-forge-ai/publication-candidate/theme-forge-nebular-fusion'
+          "$HOMEBREW_BIN" install --formula "$formula"
+          "$HOMEBREW_BIN" test --verbose "$formula"
+          test "$(tfnf --version)" = 'theme-forge-nebular-fusion 0.7.0 (aarch64-darwin)'
+          app="$(tfnf --path)"
+          test "$(shasum -a 256 "$app/Contents/MacOS/theme-forge-nebular-fusion" | cut -d ' ' -f 1)" = '8aee6af893f2a3ab01b1e4ad84dc1cad8eab2067f00200149cfb5301274232b5'
+          codesign --verify --deep --strict "$app"
+      - name: Uninstall candidate formulas
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -z "${HOMEBREW_BIN:-}"; then exit 0; fi
+          tap='knowledge-forge-ai/publication-candidate'
+          for product in nebular-fusion stellar-burst stellar-loom solar-sail; do
+            formula="$tap/theme-forge-$product"
+            if "$HOMEBREW_BIN" list --versions "$formula" >/dev/null 2>&1; then
+              "$HOMEBREW_BIN" uninstall --formula "$formula"
+              if "$HOMEBREW_BIN" list --versions "$formula" >/dev/null 2>&1; then exit 1; fi
+            fi
+          done

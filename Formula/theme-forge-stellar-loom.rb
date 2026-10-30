@@ -1,8 +1,8 @@
 class ThemeForgeStellarLoom < Formula
   desc "Theme builder and token compiler for the Theme Forge family"
   homepage "https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom"
-  url "https://registry.npmjs.org/@knowledge-forge-ai/theme-forge-stellar-loom/-/theme-forge-stellar-loom-0.4.0.tgz"
-  sha256 "4550314d9a6eb9a016c8637eb2a0a98e9a410210ad6546642dfce31c7402c9ec"
+  url "https://registry.npmjs.org/@knowledge-forge-ai/theme-forge-stellar-loom/-/theme-forge-stellar-loom-0.5.0.tgz"
+  sha256 "4e7a7d436c09ba111f5dca8101876c6e085ad15859d96bab8f728c5669880b5f"
   license "AGPL-3.0-or-later"
 
   depends_on "node"
@@ -11,11 +11,11 @@ class ThemeForgeStellarLoom < Formula
     system "npm", "install", *std_npm_args(prefix: libexec)
     (bin/"tfsl").write <<~EOS
       #!/bin/sh
-      exec "#{formula_opt_bin("node")}/node" "#{libexec}/lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom/bin/tfsl.js" "$@"
+      exec "#{Formula["node"].opt_bin}/node" "#{libexec}/lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom/bin/tfsl.js" "$@"
     EOS
     (bin/"tfsl-batch").write <<~EOS
       #!/bin/sh
-      exec "#{formula_opt_bin("node")}/node" "#{libexec}/lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom/bin/tfsl-batch.js" "$@"
+      exec "#{Formula["node"].opt_bin}/node" "#{libexec}/lib/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom/bin/tfsl-batch.js" "$@"
     EOS
   end
 
@@ -42,6 +42,6 @@ class ThemeForgeStellarLoom < Formula
       fs.writeFileSync("invalid.json", "{");
       assert.notEqual(run(["validate", "invalid.json", "--json"]).status, 0);
     JS
-    system formula_opt_bin("node")/"node", testpath/"probe.cjs"
+    system Formula["node"].opt_bin/"node", testpath/"probe.cjs"
   end
 end

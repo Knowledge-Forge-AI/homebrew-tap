@@ -13,10 +13,10 @@ brew install Knowledge-Forge-AI/tap/theme-forge-nebular-fusion
 
 CLI coverage:
 
-- **Theme Forge Stellar Burst 0.5.0** — `tfsb` plus the `tfsb-studio-service` helper.
-- **Theme Forge Stellar Loom 0.3.0** — `tfsl` and `tfsl-batch`.
-- **Theme Forge Solar Sail 0.1.0** — `tfss`.
-- **Theme Forge Nebular Fusion 0.4.0** — `tfnf` on macOS Apple Silicon.
+- **Theme Forge Stellar Burst 0.7.0** — `tfsb` plus the `tfsb-studio-service` helper.
+- **Theme Forge Stellar Loom 0.5.0** — `tfsl` and `tfsl-batch`.
+- **Theme Forge Solar Sail 0.3.0** — `tfss`.
+- **Theme Forge Nebular Fusion 0.7.0** — `tfnf` on macOS Apple Silicon.
 
 The Nebular **Formula** installs the exact ad-hoc-signed macOS Apple Silicon developer application
 payload and exposes the `tfnf` launcher. This does not authorize a Cask: the Nebular Homebrew Cask
