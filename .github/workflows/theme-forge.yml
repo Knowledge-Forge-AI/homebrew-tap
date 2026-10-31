@@ -85,9 +85,9 @@ jobs:
           formula='knowledge-forge-ai/publication-candidate/theme-forge-nebular-fusion'
           "$HOMEBREW_BIN" install --formula "$formula"
           "$HOMEBREW_BIN" test --verbose "$formula"
-          test "$(tfnf --version)" = 'theme-forge-nebular-fusion 0.7.0 (aarch64-darwin)'
+          test "$(tfnf --version)" = 'theme-forge-nebular-fusion 0.7.1 (aarch64-darwin)'
           app="$(tfnf --path)"
-          test "$(shasum -a 256 "$app/Contents/MacOS/theme-forge-nebular-fusion" | cut -d ' ' -f 1)" = '8aee6af893f2a3ab01b1e4ad84dc1cad8eab2067f00200149cfb5301274232b5'
+          test "$(shasum -a 256 "$app/Contents/MacOS/theme-forge-nebular-fusion" | cut -d ' ' -f 1)" = '02c563f82d23fa06120ae3e8145fc2b4e46f1c1653db92d185d98a04464bfe4a'
           codesign --verify --deep --strict "$app"
       - name: Uninstall candidate formulas
         if: always()
