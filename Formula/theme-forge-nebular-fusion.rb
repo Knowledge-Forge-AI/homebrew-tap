@@ -1,8 +1,8 @@
 class ThemeForgeNebularFusion < Formula
   desc "CLI launcher for the Nebular Fusion desktop workbench"
   homepage "https://github.com/Knowledge-Forge-AI/theme-forge-nebular-fusion"
-  url "https://github.com/Knowledge-Forge-AI/theme-forge-nebular-fusion/releases/download/v0.7.1/theme-forge-nebular-fusion-v0.7.1-aarch64-apple-darwin.app.tar.gz"
-  sha256 "903d7380dd54c9070e944be22c08137141d24a6e3c3f5a1f8fb53c61e9a2b342"
+  url "https://github.com/Knowledge-Forge-AI/theme-forge-nebular-fusion/releases/download/v0.8.0/theme-forge-nebular-fusion-v0.8.0-aarch64-apple-darwin.app.tar.gz"
+  sha256 "0a7ab188afc4660f68bd6dabfda96309a348108a8d77a4786df1731cddaf6896"
   license "AGPL-3.0-or-later"
 
   depends_on arch: :arm64
@@ -25,7 +25,7 @@ class ThemeForgeNebularFusion < Formula
 
       case "$1" in
         -v|--version)
-          echo "theme-forge-nebular-fusion 0.7.1 (aarch64-darwin)"
+          echo "theme-forge-nebular-fusion 0.8.0 (aarch64-darwin)"
           exit 0
           ;;
         -h|--help)
@@ -53,7 +53,7 @@ class ThemeForgeNebularFusion < Formula
   end
 
   test do
-    assert_match "0.7.1", shell_output("#{bin}/tfnf --version")
+    assert_match "0.8.0", shell_output("#{bin}/tfnf --version")
     assert_match "Nebular Fusion CLI launcher", shell_output("#{bin}/tfnf --help")
     assert_path_exists shell_output("#{bin}/tfnf --path").strip
     assert_equal ["Contents"], (libexec/"Theme Forge Nebular Fusion.app").children.map { |p| p.basename.to_s }.sort
