@@ -1,0 +1,17 @@
+Knowledge Forge AI Homebrew Tap
+
+Copyright (c) 2026 Samuel Leighton Lair and contributors.
+Steward: Samuel Leighton Lair.
+
+Original tap code, website software and documentation are licensed under
+AGPL-3.0-or-later. See LICENSE. Separate commercial licenses are available for
+proprietary terms; AGPL itself permits commercial use subject to its terms.
+Commercial contact: sam.lair@knowledge-forge.ai.
+
+Upstream applications retain their own licenses, notices and release identities.
+The license in a formula describes its upstream product. Third-party material
+retains its own terms; no earlier public grant is revoked.
+
+Hikari and organizational brand artwork are excluded from the AGPL grant.
+No separate artwork license is granted here; applicable rights are reserved.
+See BRAND-ASSETS.md.
