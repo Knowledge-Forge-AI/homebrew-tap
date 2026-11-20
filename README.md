@@ -34,7 +34,9 @@ Platform restrictions and completed qualification are distinguished below.
 | Solar Sail | 0.3.0 | [`theme-forge-solar-sail`](Formula/theme-forge-solar-sail.rb) | Qualified: Apple Silicon macOS; Linux AMD64 / ARM64. Formula requires Node, with no explicit platform restriction. |
 | Nebular Fusion | 0.8.0 | [`theme-forge-nebular-fusion`](Formula/theme-forge-nebular-fusion.rb) | Restricted to Apple Silicon macOS; app formula qualified on Apple Silicon. |
 
-The three Theme Forge CLI formulas were [qualified on all three hosts](https://github.com/Knowledge-Forge-AI/homebrew-tap/actions/runs/42434991234); that campaign also qualified Nebular on Apple Silicon. It does not cover APGR.
+The three Theme Forge CLI formulas were [qualified on all three hosts](https://github.com/Knowledge-Forge-AI/homebrew-tap/actions/runs/42434991234).
+That campaign also qualified Nebular on Apple Silicon. APGR and RS9 have
+separate qualification.
 
 ```sh
 brew install Knowledge-Forge-AI/tap/theme-forge-stellar-burst
@@ -44,7 +46,7 @@ brew install Knowledge-Forge-AI/tap/theme-forge-nebular-fusion
 brew install Knowledge-Forge-AI/tap/release-starport-9
 ```
 
-The formulas expose `apgr`; `tfsb` and `tfsb-studio-service`; `tfsl` and
+The formulas expose `apgr`; `rs9`; `tfsb` and `tfsb-studio-service`; `tfsl` and
 `tfsl-batch`; `tfss`; and the `tfnf` application launcher respectively. APGR's
 native portable installation does not require runtime Python, Node or Go
 compilers and does not include the developer test suite (`apgr test`).
@@ -74,6 +76,8 @@ the seven declared website files from main. It does not build or install formula
 change product versions, sign packages or publish product releases. Theme Forge formula
 qualification remains in the existing, separately triggered workflow. APGR is
 not covered by that workflow; its Homebrew qualification remains pending.
+The [RS9 workflow](.github/workflows/rs9-cli.yml) checks the RS9 formula on
+the three listed platforms.
 
 ## License and contributions
 
