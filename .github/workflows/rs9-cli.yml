@@ -1,0 +1,81 @@
+name: Qualify RS9 CLI on Homebrew
+
+on:
+  pull_request:
+    paths:
+      - "Formula/release-starport-9.rb"
+      - ".github/workflows/rs9-cli.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    if: github.repository == 'Knowledge-Forge-AI/homebrew-tap' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            machine: arm64
+            brew: /opt/homebrew/bin/brew
+          - runner: ubuntu-24.04
+            machine: x86_64
+            brew: /home/linuxbrew/.linuxbrew/bin/brew
+          - runner: ubuntu-24.04-arm
+            machine: aarch64
+            brew: /home/linuxbrew/.linuxbrew/bin/brew
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_ANALYTICS: "1"
+      HOMEBREW_NO_ENV_HINTS: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - name: Verify the RS9 formula on the native host
+        shell: bash
+        env:
+          BREW: ${{ matrix.brew }}
+          EXPECTED_MACHINE: ${{ matrix.machine }}
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = "$EXPECTED_MACHINE"
+          test -x "$BREW"
+          tap=knowledge-forge-ai/rs9-cli-qualification
+          formula="$tap/release-starport-9"
+          test ! -e "$("$BREW" --repo "$tap")"
+          test -z "$("$BREW" list --formula --versions release-starport-9)"
+          XDG_CONFIG_HOME="$(mktemp -d "$RUNNER_TEMP/rs9-brew-config.XXXXXX")"
+          export XDG_CONFIG_HOME
+          tap_started=false
+          trust_started=false
+          cleanup() {
+            local status=$? cleanup_status=0
+            set +e
+            if "$tap_started"; then
+              if "$BREW" list --formula --versions "$formula" >/dev/null 2>&1; then
+                "$BREW" uninstall --formula "$formula" || cleanup_status=1
+              fi
+              if "$trust_started"; then
+                "$BREW" untrust --formula "$formula" || cleanup_status=1
+              fi
+              "$BREW" untap "$tap" || cleanup_status=1
+            fi
+            if [ "$status" -eq 0 ]; then status="$cleanup_status"; fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+          "$BREW" tap --custom-remote "$tap" "$GITHUB_WORKSPACE"
+          tap_started=true
+          test "$(git -C "$("$BREW" --repo "$tap")" rev-parse HEAD)" = "$GITHUB_SHA"
+          if "$BREW" help trust >/dev/null 2>&1; then
+            "$BREW" trust --formula "$formula"
+            trust_started=true
+          fi
+          "$BREW" install --formula "$formula"
+          "$BREW" test --verbose "$formula"
+          test "$("$("$BREW" --prefix "$formula")/bin/rs9" --version)" = "0.1.0"
