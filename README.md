@@ -1,8 +1,8 @@
 # Knowledge Forge AI Homebrew tap
 
 The Homebrew tap for **all Knowledge Forge AI projects** as their formulas become
-available. The current catalog includes Agentic Praxis Grimoire and the Theme
-Forge engines and workbench. Hikari, RS9's admiral, represents this shared
+available. The current catalog includes Agentic Praxis Grimoire, Release Starport 9,
+and the Theme Forge engines and workbench. Hikari, RS9's admiral, represents this shared
 distribution infrastructure.
 
 **[Visit the tap website](https://brew.rs9.knowledge-forge.ai/)** ·
@@ -21,13 +21,14 @@ qualified installs also work without a separate tap command.
 
 ## Current formulas
 
-This documentation reflects the committed formula catalog on 11 November 2026.
+This documentation reflects the committed formula catalog on 19 November 2026.
 The linked formula defines its version, archive, hash and installation behavior.
 Platform restrictions and completed qualification are distinguished below.
 
 | Project | Version | Formula | Platform restrictions and qualification |
 | --- | --- | --- | --- |
 | Agentic Praxis Grimoire | 0.13.1 | [`agentic-praxis-grimoire`](Formula/agentic-praxis-grimoire.rb) | Declared: Apple Silicon macOS; Linux AMD64 / ARM64. Homebrew load, installation and coexistence qualification remain pending, as the formula caveat records. |
+| Release Starport 9 | 0.1.0 | [`release-starport-9`](Formula/release-starport-9.rb) | Targets Apple Silicon macOS and Linux AMD64 / ARM64. The formula installs the released Python wheel and exposes `rs9`. |
 | Stellar Burst | 0.7.0 | [`theme-forge-stellar-burst`](Formula/theme-forge-stellar-burst.rb) | Qualified: Apple Silicon macOS; Linux AMD64 / ARM64. Formula requires Node, with no explicit platform restriction. |
 | Stellar Loom | 0.5.0 | [`theme-forge-stellar-loom`](Formula/theme-forge-stellar-loom.rb) | Qualified: Apple Silicon macOS; Linux AMD64 / ARM64. Formula requires Node, with no explicit platform restriction. |
 | Solar Sail | 0.3.0 | [`theme-forge-solar-sail`](Formula/theme-forge-solar-sail.rb) | Qualified: Apple Silicon macOS; Linux AMD64 / ARM64. Formula requires Node, with no explicit platform restriction. |
@@ -40,6 +41,7 @@ brew install Knowledge-Forge-AI/tap/theme-forge-stellar-burst
 brew install Knowledge-Forge-AI/tap/theme-forge-stellar-loom
 brew install Knowledge-Forge-AI/tap/theme-forge-solar-sail
 brew install Knowledge-Forge-AI/tap/theme-forge-nebular-fusion
+brew install Knowledge-Forge-AI/tap/release-starport-9
 ```
 
 The formulas expose `apgr`; `tfsb` and `tfsb-studio-service`; `tfsl` and
